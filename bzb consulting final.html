@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BZB Consulting S.A.S | Environmental and Safety Company</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --azul:#1f4e6e;
+    --azul-hondo:#0e2f47;
+    --azul-noche:#0a2033;
+    --lima:#8fd14f;
+    --lima-claro:#c8ec9d;
+    --turquesa:#3eb1c8;
+    --turquesa-claro:#7dd3e0;
+    --tierra:#a0673a;
+    --texto:#16303f;
+    --texto-suave:#4a6373;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;overflow-x:hidden;scroll-padding-top:145px}
+  body{
+    font-family:'Inter',-apple-system,sans-serif;
+    color:var(--texto);background:#eef5f9;
+    font-size:20px;line-height:1.75;overflow-x:hidden;width:100%;
+  }
+  img{max-width:100%;display:block}
+
+  #progress{position:fixed;top:0;left:0;height:4px;width:0%;background:linear-gradient(90deg,var(--azul),var(--turquesa) 50%,var(--lima));z-index:200;transition:width .1s linear}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+  @keyframes pulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.25)}}
+  @keyframes drift{0%{transform:translate(0,0) rotate(0deg);opacity:0}10%{opacity:.45}90%{opacity:.45}100%{transform:translate(60px,-380px) rotate(220deg);opacity:0}}
+  @keyframes shine{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @keyframes ring{0%{transform:scale(.9);opacity:.7}100%{transform:scale(1.6);opacity:0}}
+
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.7,.3,1),transform .9s cubic-bezier(.2,.7,.3,1)}
+  .reveal.on{opacity:1;transform:translateY(0)}
+
+  /* ===== NAV ===== */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(255,255,255,.94);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 5%;height:130px;
+    transition:height .3s,box-shadow .3s;
+  }
+  nav.shrink{height:96px;box-shadow:0 6px 26px rgba(14,47,71,.12)}
+  .logo-img{height:106px;width:auto;transition:transform .4s cubic-bezier(.2,.7,.3,1),height .3s}
+  nav.shrink .logo-img{height:80px}
+  .logo-img:hover{transform:scale(1.06)}
+
+  .nav-right{display:flex;align-items:center;gap:28px}
+  .nav-links{display:flex;gap:32px;list-style:none;align-items:center}
+  .nav-links a{
+    text-decoration:none;font-family:'Outfit',sans-serif;
+    font-size:16px;color:var(--azul-hondo);font-weight:700;
+    letter-spacing:.6px;text-transform:uppercase;position:relative;padding:6px 0;transition:color .3s;
+  }
+  .nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--azul),var(--lima));transition:width .35s}
+  .nav-links a:hover{color:var(--azul)}
+  .nav-links a:hover::after{width:100%}
+
+  /* selector idioma */
+  .lang{display:flex;background:#e7f0f6;border-radius:40px;padding:4px;gap:2px}
+  .lang button{
+    border:none;cursor:pointer;background:transparent;
+    font-family:'Outfit',sans-serif;font-size:13px;font-weight:800;letter-spacing:1px;
+    color:var(--azul);padding:7px 14px;border-radius:30px;transition:background .3s,color .3s;
+  }
+  .lang button.active{background:var(--azul);color:#fff}
+
+  .hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:6px;z-index:101}
+  .hamburger span{display:block;width:32px;height:3px;background:var(--turquesa);border-radius:3px;transition:transform .3s,opacity .3s}
+  .hamburger.active span:nth-child(1){transform:translateY(9px) rotate(45deg)}
+  .hamburger.active span:nth-child(2){opacity:0}
+  .hamburger.active span:nth-child(3){transform:translateY(-9px) rotate(-45deg)}
+
+  .mobile-menu{position:fixed;top:130px;left:0;right:0;background:#fff;box-shadow:0 14px 40px rgba(14,47,71,.12);max-height:0;overflow:hidden;transition:max-height .45s ease;z-index:99}
+  .mobile-menu.open{max-height:560px}
+  .mobile-menu ul{list-style:none}
+  .mobile-menu li{border-bottom:1px solid rgba(31,78,110,.08)}
+  .mobile-menu li:last-child{border-bottom:none}
+  .mobile-menu a{display:block;padding:20px 8%;text-decoration:none;font-family:'Outfit',sans-serif;font-size:17px;font-weight:600;color:var(--azul-hondo);letter-spacing:1px;text-transform:uppercase;transition:color .2s,background .2s,padding-left .3s}
+  .mobile-menu a:hover{color:var(--azul);background:#eef5f9;padding-left:10%}
+
+  /* ===== HERO ===== */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:200px 6% 110px;overflow:hidden;color:#fff}
+  .hero-bg{
+    position:absolute;inset:-2px;z-index:0;
+    background:linear-gradient(135deg,rgba(10,32,51,.94) 0%,rgba(31,78,110,.88) 55%,rgba(62,177,200,.68) 100%),
+      url('https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=1920&q=80') center/cover;
+  }
+  .hero-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 75% 80%,rgba(143,209,79,.25) 0%,transparent 58%)}
+  .orb{position:absolute;border-radius:50%;z-index:1;pointer-events:none}
+  .orb1{top:12%;right:-120px;width:540px;height:540px;background:radial-gradient(circle,rgba(143,209,79,.18) 0%,transparent 66%);animation:floaty 9s ease-in-out infinite}
+  .orb2{bottom:5%;left:-110px;width:430px;height:430px;background:radial-gradient(circle,rgba(62,177,200,.16) 0%,transparent 70%);animation:floaty 12s ease-in-out infinite reverse}
+  .leaf{position:absolute;bottom:-40px;width:14px;height:14px;border-radius:0 100% 0 100%;opacity:0;z-index:1;pointer-events:none}
+
+  .hero-content{position:relative;z-index:3;max-width:1020px;margin:0 auto;text-align:center}
+  .hero-logo{
+    display:inline-block;background:#fff;padding:26px 44px;border-radius:28px;margin-bottom:42px;
+    box-shadow:0 26px 70px rgba(0,0,0,.32);
+    animation:fadeUp .9s cubic-bezier(.2,.7,.3,1) both;
+    transition:transform .4s cubic-bezier(.2,.7,.3,1),box-shadow .4s;
+  }
+  .hero-logo:hover{transform:translateY(-6px) scale(1.03);box-shadow:0 34px 80px rgba(0,0,0,.4)}
+  .hero-logo img{height:clamp(120px,17vw,220px);width:auto;margin:0 auto}
+
+  .hero-eyebrow{
+    display:inline-flex;align-items:center;gap:12px;
+    font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;
+    color:var(--lima);margin-bottom:30px;padding:10px 24px;
+    background:rgba(143,209,79,.12);border:1px solid rgba(143,209,79,.35);border-radius:40px;backdrop-filter:blur(10px);
+    animation:fadeUp .9s .15s cubic-bezier(.2,.7,.3,1) both;
+  }
+  .hero-eyebrow::before{content:'';width:8px;height:8px;background:var(--lima);border-radius:50%;box-shadow:0 0 14px var(--lima);animation:pulse 2.2s ease-in-out infinite}
+
+  .hero h1{font-family:'Outfit',sans-serif;font-size:clamp(28px,3.6vw,48px);font-weight:800;line-height:1.2;letter-spacing:-1.2px;margin-bottom:28px;animation:fadeUp .9s .3s cubic-bezier(.2,.7,.3,1) both}
+  .hero h1 span{
+    background:linear-gradient(100deg,var(--lima) 0%,var(--lima-claro) 35%,var(--turquesa-claro) 70%,var(--lima) 100%);
+    background-size:250% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    animation:shine 6s linear infinite;
+  }
+  .hero p{font-size:23px;color:rgba(255,255,255,.9);max-width:720px;margin:0 auto 46px;line-height:1.75;font-weight:300;animation:fadeUp .9s .45s cubic-bezier(.2,.7,.3,1) both}
+  .hero-cta{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;animation:fadeUp .9s .6s cubic-bezier(.2,.7,.3,1) both}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;padding:19px 44px;border-radius:60px;
+    font-family:'Outfit',sans-serif;font-size:19px;font-weight:700;letter-spacing:.4px;
+    cursor:pointer;text-decoration:none;border:none;position:relative;overflow:hidden;
+    transition:transform .3s cubic-bezier(.2,.7,.3,1),box-shadow .3s;
+  }
+  .btn::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(255,255,255,.45),transparent);transform:translateX(-130%);transition:transform .6s}
+  .btn:hover::before{transform:translateX(130%)}
+  .btn-primary{background:linear-gradient(135deg,var(--lima),#6bb830);color:var(--azul-hondo);box-shadow:0 12px 34px rgba(143,209,79,.4)}
+  .btn-primary:hover{transform:translateY(-4px);box-shadow:0 18px 44px rgba(143,209,79,.55)}
+  .btn-outline{background:rgba(255,255,255,.1);color:#fff;border:2px solid rgba(255,255,255,.35);backdrop-filter:blur(10px)}
+  .btn-outline:hover{transform:translateY(-4px);background:rgba(255,255,255,.2);border-color:#fff}
+
+  /* ===== SECCIONES ===== */
+  .section-tag{display:inline-flex;align-items:center;gap:11px;font-family:'Outfit',sans-serif;font-size:17px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:#5aa02a;margin-bottom:20px;padding:11px 26px;background:#eaf9d8;border-radius:40px}
+  .section-tag::before{content:'';width:9px;height:9px;background:var(--lima);border-radius:50%;animation:pulse 2.4s ease-in-out infinite}
+  .section-title{font-family:'Outfit',sans-serif;font-size:clamp(34px,4.6vw,58px);font-weight:800;color:var(--azul-hondo);letter-spacing:-1.5px;line-height:1.12}
+  .section-subtitle{font-size:21px;color:var(--texto-suave);max-width:720px;margin:22px auto 0;line-height:1.75}
+  .section-header-center{text-align:center;max-width:820px;margin:0 auto 76px}
+
+  /* ===== SOBRE NOSOTROS ===== */
+  .about{padding:120px 6% 110px;background:linear-gradient(180deg,#eef5f9 0%,#f3f9ec 100%);position:relative;overflow:hidden}
+  .about::before{content:'';position:absolute;top:-140px;right:-140px;width:480px;height:480px;background:radial-gradient(circle,rgba(143,209,79,.14) 0%,transparent 70%);border-radius:50%}
+  .about-inner{max-width:1180px;margin:0 auto;text-align:center;position:relative;z-index:1}
+  .about-inner h2{margin-bottom:24px}
+  .about-inner p{font-size:21px;color:var(--texto-suave);line-height:1.9;margin:0 auto 22px;max-width:860px}
+  .about-features{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:54px;text-align:left;align-items:stretch}
+  @media (max-width:1100px){.about-features{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:560px){.about-features{grid-template-columns:1fr}}
+  .feature{display:flex;flex-direction:column;align-items:flex-start;gap:14px;padding:26px 22px;background:#fff;border-radius:18px;border-left:5px solid var(--lima);box-shadow:0 4px 20px rgba(14,47,71,.06);transition:transform .35s cubic-bezier(.2,.7,.3,1),box-shadow .35s;height:100%}
+  .feature:hover{transform:translateY(-8px);box-shadow:0 22px 44px rgba(14,47,71,.14)}
+  .feature:nth-child(2){border-left-color:var(--turquesa)}
+  .feature:nth-child(3){border-left-color:var(--azul)}
+  .feature:nth-child(4){border-left-color:var(--tierra)}
+  .feature-icon{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--lima),var(--lima-claro));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .feature:nth-child(2) .feature-icon{background:linear-gradient(135deg,var(--turquesa),var(--turquesa-claro))}
+  .feature:nth-child(3) .feature-icon{background:linear-gradient(135deg,var(--azul),#3670a0)}
+  .feature:nth-child(4) .feature-icon{background:linear-gradient(135deg,var(--tierra),#c48b5c)}
+  .feature-icon svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .feature-text strong{display:block;font-family:'Outfit',sans-serif;font-size:20px;color:var(--azul-hondo);font-weight:800;margin-bottom:6px;line-height:1.25}
+  .feature-text span{font-size:17px;color:#7d93a3;line-height:1.5;display:block}
+
+  /* ===== STATS ===== */
+  .stats{background:linear-gradient(135deg,var(--azul-hondo),var(--azul) 60%,#2a6a8e);padding:70px 6%;position:relative;overflow:hidden}
+  .stats::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--azul),var(--lima) 50%,var(--turquesa))}
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:36px;max-width:1000px;margin:0 auto;text-align:center}
+  .stat-num{font-family:'Outfit',sans-serif;font-size:clamp(40px,4.6vw,58px);font-weight:900;color:var(--lima);line-height:1;letter-spacing:-2px}
+  .stat-label{font-family:'Outfit',sans-serif;font-size:17px;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:2px;margin-top:12px;font-weight:600}
+
+  /* ===== SERVICIOS ===== */
+  .areas{padding:120px 6% 100px;background:linear-gradient(180deg,#f3f9ec 0%,#eaf2f8 100%);position:relative;overflow:hidden}
+  .areas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:34px;max-width:1320px;margin:0 auto}
+  .area-card{background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 6px 26px rgba(14,47,71,.07);display:flex;flex-direction:column;transition:transform .45s cubic-bezier(.2,.7,.3,1),box-shadow .45s}
+  .area-card:hover{transform:translateY(-14px);box-shadow:0 36px 70px rgba(14,47,71,.18)}
+  .area-image{height:240px;position:relative;overflow:hidden}
+  .area-image img{width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.2,.7,.3,1)}
+  .area-card:hover .area-image img{transform:scale(1.14)}
+  .area-image::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(14,47,71,.75) 100%)}
+  .area-image-tag{position:absolute;top:22px;left:22px;z-index:2;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);padding:9px 20px;border-radius:40px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:var(--azul)}
+  .area-card:nth-child(2) .area-image-tag{color:#5aa02a}
+  .area-card:nth-child(3) .area-image-tag{color:var(--turquesa)}
+  .area-body{padding:36px 32px;flex:1;display:flex;flex-direction:column}
+  .area-body h3{font-family:'Outfit',sans-serif;font-size:30px;font-weight:800;color:var(--azul-hondo);margin-bottom:20px;letter-spacing:-.8px;line-height:1.2}
+  .area-body ul{list-style:none;flex:1}
+  .area-body ul li{font-size:18px;color:var(--texto-suave);padding:12px 0 12px 30px;position:relative;line-height:1.65;border-bottom:1px solid #edf3f7;transition:padding-left .3s,color .3s}
+  .area-body ul li:last-child{border-bottom:none}
+  .area-body ul li:hover{padding-left:36px;color:var(--azul-hondo)}
+  .area-body ul li::before{content:'';position:absolute;left:0;top:19px;width:18px;height:3px;border-radius:3px;background:var(--azul);transition:width .3s}
+  .area-body ul li:hover::before{width:26px}
+  .area-card:nth-child(2) .area-body ul li::before{background:var(--lima)}
+  .area-card:nth-child(3) .area-body ul li::before{background:var(--turquesa)}
+
+  /* ===== CTA ===== */
+  .cta-strip{padding:100px 6%;color:#fff;text-align:center;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(10,32,51,.95),rgba(31,78,110,.9)),url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&q=80') center/cover}
+  .cta-strip::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--azul),var(--lima) 50%,var(--turquesa))}
+  .cta-content{max-width:900px;margin:0 auto;position:relative;z-index:1}
+  .cta-strip h2{font-family:'Outfit',sans-serif;font-size:clamp(32px,4.2vw,52px);font-weight:800;line-height:1.2;margin-bottom:22px;letter-spacing:-1.2px}
+  .cta-strip h2 em{color:var(--lima);font-style:normal}
+  .cta-strip p{font-size:22px;color:rgba(255,255,255,.88);margin-bottom:40px;font-weight:300}
+
+  /* ===== EQUIPO ===== */
+  .team{padding:120px 6% 100px;background:linear-gradient(180deg,#eaf2f8 0%,#f3f9ec 100%)}
+  .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:34px;max-width:900px;margin:0 auto}
+  .team-card{background:#fff;border-radius:24px;overflow:hidden;text-align:center;box-shadow:0 6px 26px rgba(14,47,71,.07);transition:transform .45s cubic-bezier(.2,.7,.3,1),box-shadow .45s}
+  .team-card:hover{transform:translateY(-12px);box-shadow:0 34px 66px rgba(14,47,71,.18)}
+  .team-head{height:300px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+  .team-head-1{background:linear-gradient(135deg,var(--azul-hondo),var(--azul) 55%,var(--turquesa))}
+  .team-head-2{background:linear-gradient(135deg,#eef5f9,#e2eef5)}
+  .team-avatar{width:170px;height:170px;border-radius:50%;background:rgba(255,255,255,.16);border:4px solid rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit',sans-serif;font-size:64px;font-weight:900;backdrop-filter:blur(10px);position:relative;z-index:2;transition:transform .45s cubic-bezier(.2,.7,.3,1)}
+  .team-card:hover .team-avatar{transform:scale(1.08)}
+  .team-avatar::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:3px solid rgba(143,209,79,.6);animation:ring 2.6s ease-out infinite}
+  .team-avatar-empty{width:170px;height:170px;border-radius:50%;background:rgba(31,78,110,.07);border:4px dashed rgba(31,78,110,.28);display:flex;align-items:center;justify-content:center}
+  .team-body{padding:34px 30px}
+  .team-body h4{font-family:'Outfit',sans-serif;font-size:28px;font-weight:800;color:var(--azul-hondo);margin-bottom:8px;letter-spacing:-.6px}
+  .team-role{font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;color:#5aa02a;text-transform:uppercase;letter-spacing:2.2px;margin-bottom:18px}
+  .team-body p{font-size:18px;color:var(--texto-suave);line-height:1.75;margin-bottom:20px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .chip{font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;padding:7px 16px;border-radius:40px}
+  .chip-a{background:#e6f2f7;color:var(--azul)}
+  .chip-b{background:#eaf9d8;color:#5aa02a}
+  .chip-c{background:#e2f5f9;color:var(--turquesa)}
+  .chip-off{background:#eef2f6;color:#9db0c0}
+  .team-linkedin{display:inline-flex;align-items:center;gap:9px;margin-top:20px;padding:11px 24px;border-radius:40px;text-decoration:none;background:linear-gradient(135deg,var(--azul),#2a6a8e);color:#fff;font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;transition:transform .3s,box-shadow .3s}
+  .team-linkedin:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(31,78,110,.4)}
+  .team-linkedin svg{width:17px;height:17px;fill:#fff}
+
+  /* ===== CLIENTES ===== */
+  .testimonials{padding:120px 6% 60px;background:linear-gradient(180deg,#f3f9ec 0%,#e8f1f7 100%);position:relative;overflow:hidden}
+  .testimonials::before{content:'"';position:absolute;top:30px;left:4%;font-family:'Outfit',sans-serif;font-size:320px;color:var(--azul);opacity:.04;line-height:1}
+  .testimonials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:30px;max-width:1250px;margin:0 auto;position:relative}
+  .testimonial{background:#fff;padding:44px 36px;border-radius:24px;position:relative;box-shadow:0 6px 26px rgba(14,47,71,.07);transition:transform .4s cubic-bezier(.2,.7,.3,1),box-shadow .4s}
+  .testimonial:hover{transform:translateY(-10px);box-shadow:0 30px 60px rgba(14,47,71,.16)}
+  .testimonial-stars{color:#f5c518;margin-bottom:20px;font-size:19px;letter-spacing:3px}
+  .testimonial-quote{font-size:19px;color:#3d5566;line-height:1.85;margin-bottom:26px}
+  .testimonial-author{display:flex;align-items:center;gap:16px;padding-top:24px;border-top:1px solid #edf3f7}
+  .testimonial-avatar{width:66px;height:66px;border-radius:50%;flex-shrink:0;overflow:hidden;background:#fff;border:2px solid #e4eef4;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(14,47,71,.12);transition:transform .35s cubic-bezier(.2,.7,.3,1)}.testimonial:hover .testimonial-avatar{transform:scale(1.08)}.testimonial-avatar img{width:100%;height:100%;object-fit:cover}
+    .testimonial-info strong{display:block;font-family:'Outfit',sans-serif;font-size:20px;color:var(--azul-hondo);font-weight:800}
+  .testimonial-info span{font-size:16px;color:#7d93a3}
+
+  .marquee-wrap{overflow:hidden;padding:50px 0 90px;background:#e8f1f7;position:relative}
+  .marquee-wrap::before,.marquee-wrap::after{content:'';position:absolute;top:0;bottom:0;width:140px;z-index:2;pointer-events:none}
+  .marquee-wrap::before{left:0;background:linear-gradient(90deg,#e8f1f7,transparent)}
+  .marquee-wrap::after{right:0;background:linear-gradient(270deg,#e8f1f7,transparent)}
+  .marquee{display:flex;gap:64px;width:max-content;align-items:center;animation:marquee 30s linear infinite}
+  .marquee:hover{animation-play-state:paused}
+  .marquee img{height:92px;width:92px;object-fit:cover;border-radius:20px;background:#fff;padding:0;box-shadow:0 4px 18px rgba(14,47,71,.1);filter:grayscale(1);opacity:.55;transition:filter .4s,opacity .4s,transform .4s}
+  .marquee img:hover{filter:grayscale(0);opacity:1;transform:translateY(-6px) scale(1.06)}
+
+  /* ===== AGENDAR REUNIÓN ===== */
+  .meeting{padding:110px 6% 110px;background:linear-gradient(180deg,#e8f1f7 0%,#eef5f9 100%);position:relative;overflow:hidden}
+  .meeting::before{content:'';position:absolute;bottom:-160px;left:-160px;width:520px;height:520px;background:radial-gradient(circle,rgba(62,177,200,.12) 0%,transparent 70%);border-radius:50%}
+  .form-card{
+    max-width:880px;margin:0 auto;background:#fff;border-radius:28px;
+    padding:52px 48px;box-shadow:0 20px 60px rgba(14,47,71,.1);
+    position:relative;z-index:1;border-top:6px solid transparent;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(90deg,var(--azul),var(--lima) 50%,var(--turquesa));
+    background-origin:border-box;background-clip:padding-box,border-box;
+  }
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .field{display:flex;flex-direction:column}
+  .field.full{grid-column:1/-1}
+  .field label{font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;color:var(--azul-hondo);margin-bottom:9px;letter-spacing:.3px}
+  .field input,.field select,.field textarea{
+    font-family:'Inter',sans-serif;font-size:18px;color:var(--texto);
+    padding:16px 20px;border:2px solid #dbe7ef;border-radius:14px;background:#fafcfd;
+    outline:none;transition:border-color .3s,box-shadow .3s,background .3s;width:100%;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--lima);background:#fff;box-shadow:0 0 0 4px rgba(143,209,79,.18)}
+  .field textarea{resize:vertical;min-height:130px;line-height:1.6}
+  .form-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
+  .btn-wa{background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;box-shadow:0 12px 30px rgba(37,211,102,.35)}
+  .btn-wa:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(37,211,102,.5)}
+  .btn-mail{background:linear-gradient(135deg,var(--azul),#2a6a8e);color:#fff;box-shadow:0 12px 30px rgba(31,78,110,.3)}
+  .btn-mail:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(31,78,110,.45)}
+  .form-note{font-size:16px;color:#7d93a3;margin-top:18px;text-align:center}
+
+  /* ===== CONTACTO ===== */
+  .contact{position:relative;padding:120px 6% 110px;color:#fff;overflow:hidden;background:linear-gradient(135deg,rgba(10,32,51,.96) 0%,rgba(31,78,110,.92) 100%),url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1920&q=80') center/cover}
+  .contact::before{content:'';position:absolute;top:-120px;right:-120px;width:420px;height:420px;background:radial-gradient(circle,rgba(143,209,79,.18) 0%,transparent 70%);border-radius:50%;animation:floaty 9s ease-in-out infinite}
+  .contact-header{text-align:center;margin-bottom:64px;position:relative;z-index:1}
+  .contact-header .section-title{color:#fff}
+  .contact-header .section-tag{background:rgba(143,209,79,.16);border:1px solid rgba(143,209,79,.35);color:var(--lima)}
+  .contact-header .section-subtitle{color:rgba(255,255,255,.8);margin-left:auto;margin-right:auto}
+  .contact-grid{display:flex;flex-wrap:wrap;gap:26px;justify-content:center;max-width:840px;margin:0 auto;position:relative;z-index:1}
+  .contact-card{flex:1 1 300px;max-width:370px;padding:44px 30px;border-radius:24px;text-align:center;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(12px);text-decoration:none;display:block;transition:transform .4s cubic-bezier(.2,.7,.3,1),background .4s,border-color .4s,box-shadow .4s}
+  .contact-card:hover{transform:translateY(-10px);background:rgba(255,255,255,.13);border-color:var(--lima);box-shadow:0 26px 50px rgba(143,209,79,.2)}
+  .contact-icon-round{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--lima),#6bb830);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:0 12px 28px rgba(143,209,79,.4);transition:transform .4s cubic-bezier(.2,.7,.3,1)}
+  .contact-card:hover .contact-icon-round{transform:scale(1.12) rotate(-6deg)}
+  .contact-icon-wa{background:linear-gradient(135deg,#25d366,#128c7e);box-shadow:0 12px 28px rgba(37,211,102,.4)}
+  .contact-icon-round svg{width:30px;height:30px}
+  .contact-card h4{font-family:'Outfit',sans-serif;font-size:16px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--lima);margin-bottom:14px}
+  .contact-card .val{font-size:21px;font-weight:600;color:#fff;word-break:break-word;line-height:1.5}
+  .contact-address{max-width:840px;margin:44px auto 0;padding:32px;background:rgba(255,255,255,.06);border-radius:24px;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:22px;justify-content:center;position:relative;z-index:1;backdrop-filter:blur(12px)}
+  .contact-address-icon{width:58px;height:58px;background:linear-gradient(135deg,var(--turquesa),var(--turquesa-claro));border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .contact-address-icon svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .contact-address-text strong{display:block;font-family:'Outfit',sans-serif;color:var(--lima);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:2px;margin-bottom:5px}
+  .contact-address-text span{font-size:21px;color:#fff;font-weight:500}
+
+  /* ===== FOOTER ===== */
+  footer{background:var(--azul-noche);padding:70px 6% 34px;color:#a3bcd2}
+  .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:60px;max-width:1250px;margin:0 auto 44px}
+  .footer-brand img{height:100px;width:auto;background:#fff;padding:12px 16px;border-radius:14px;margin-bottom:24px}
+  .footer-brand p{font-size:18px;color:#8fb0c9;line-height:1.8;margin-bottom:26px;max-width:400px}
+  .footer-social{display:flex;gap:14px}
+  .footer-social a{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;transition:background .3s,transform .3s}
+  .footer-social a:hover{background:var(--lima);transform:translateY(-5px)}
+  .footer-social svg{width:19px;height:19px;fill:#fff}
+  .footer-col h5{font-family:'Outfit',sans-serif;font-size:16px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:2px;margin-bottom:24px}
+  .footer-col ul{list-style:none}
+  .footer-col ul li{margin-bottom:14px}
+  .footer-col a{color:#a3bcd2;font-size:18px;text-decoration:none;transition:color .25s,padding-left .25s}
+  .footer-col a:hover{color:var(--lima);padding-left:5px}
+  .footer-bottom{max-width:1250px;margin:0 auto;padding-top:26px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;font-size:17px;color:#7ea3bd}
+
+  .wa-float{position:fixed;bottom:26px;right:26px;z-index:150;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#25d366,#128c7e);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 32px rgba(37,211,102,.45);text-decoration:none;transition:transform .35s cubic-bezier(.2,.7,.3,1)}
+  .wa-float:hover{transform:scale(1.12)}
+  .wa-float svg{width:32px;height:32px;fill:#fff}
+  .wa-float::before{content:'';position:absolute;inset:0;border-radius:50%;border:3px solid rgba(37,211,102,.55);animation:ring 2.4s ease-out infinite}
+
+  @media (max-width:968px){
+    .footer-top{grid-template-columns:1fr;gap:40px}
+    .form-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:768px){
+    body{font-size:18px}
+    nav{height:100px;padding:0 5%}
+    nav.shrink{height:86px}
+    .logo-img{height:76px}
+    nav.shrink .logo-img{height:64px}
+    .nav-links{display:none}
+    .hamburger{display:flex}
+    .nav-right{gap:14px}
+    .lang button{padding:6px 11px;font-size:12px}
+    .mobile-menu{top:100px}
+    .hero{min-height:88vh;padding:150px 6% 80px}
+    .hero-logo{padding:22px 28px;border-radius:22px;margin-bottom:30px}
+    
+    .hero p{font-size:19px}
+    .btn{font-size:17px;padding:16px 34px}
+    .section-tag{font-size:15px;padding:9px 20px}
+    .section-subtitle{font-size:19px}
+    .about-inner p{font-size:19px}
+    .about,.areas,.team,.testimonials,.contact,.meeting{padding:80px 6% 64px}
+    .form-card{padding:36px 26px}
+    .contact-address{flex-direction:column;text-align:center}
+    .marquee img{height:72px;width:72px}
+    .wa-float{width:56px;height:56px;bottom:20px;right:20px}
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <img src="logo_bzb.jpg" onerror="this.onerror=null;this.src='logo_bzb.jpg.jpg'" alt="BZB Consulting S.A.S" class="logo-img">
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#nosotros" data-es="Nosotros" data-en="About Us">Nosotros</a></li>
+      <li><a href="#servicios" data-es="Servicios" data-en="Services">Servicios</a></li>
+      <li><a href="#equipo" data-es="Equipo" data-en="Team">Equipo</a></li>
+      <li><a href="#reunion" data-es="Agendar" data-en="Book a Call">Agendar</a></li>
+    </ul>
+    <div class="lang">
+      <button id="btn-es" class="active" onclick="setLang('es')">ES</button>
+      <button id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <ul>
+    <li><a href="#nosotros" onclick="closeMenu()" data-es="Nosotros" data-en="About Us">Nosotros</a></li>
+    <li><a href="#servicios" onclick="closeMenu()" data-es="Servicios" data-en="Services">Servicios</a></li>
+    <li><a href="#equipo" onclick="closeMenu()" data-es="Nuestro Equipo" data-en="Our Team">Nuestro Equipo</a></li>
+    <li><a href="#reunion" onclick="closeMenu()" data-es="Agendar Reunión" data-en="Book a Meeting">Agendar Reunión</a></li>
+    <li><a href="#contacto" onclick="closeMenu()" data-es="Contáctenos" data-en="Contact Us">Contáctenos</a></li>
+  </ul>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+
+  <div class="hero-content">
+    <div class="hero-logo">
+      <img src="logo_bzb.jpg" onerror="this.onerror=null;this.src='logo_bzb.jpg.jpg'" alt="BZB Consulting S.A.S">
+    </div>
+    <h1 data-es='Hacemos de la sostenibilidad y la seguridad una <span>práctica de alto impacto</span> para las organizaciones' data-en='We turn sustainability and safety into a <span>high-impact practice</span> for organizations'>Hacemos de la sostenibilidad y la seguridad una <span>práctica de alto impacto</span> para las organizaciones</h1>
+    <p data-es="Consultoría ambiental y de seguridad para organizaciones que buscan cumplir, mejorar y generar valor sostenible con resultados medibles." data-en="Environmental and safety consulting for organizations seeking to comply, improve and generate sustainable value with measurable results.">Consultoría ambiental y de seguridad para organizaciones que buscan cumplir, mejorar y generar valor sostenible con resultados medibles.</p>
+    <div class="hero-cta">
+      <a href="#servicios" class="btn btn-primary" data-es="Explorar servicios →" data-en="Explore services →">Explorar servicios →</a>
+      <a href="#reunion" class="btn btn-outline" data-es="Agendar reunión" data-en="Book a meeting">Agendar reunión</a>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE NOSOTROS -->
+<section class="about" id="nosotros">
+  <div class="about-inner">
+    <div class="section-tag reveal" data-es="Sobre Nosotros" data-en="About Us">Sobre Nosotros</div>
+    <h2 class="section-title reveal" data-es="Consultoría ambiental y de seguridad con propósito" data-en="Environmental and safety consulting with purpose">Consultoría ambiental y de seguridad con propósito</h2>
+    <p class="reveal" data-es="En <strong>BZB Consulting S.A.S</strong> combinamos experiencia técnica, conocimiento normativo y visión estratégica para ayudar a las organizaciones a construir un futuro más seguro y sostenible." data-en="At <strong>BZB Consulting S.A.S</strong> we combine technical expertise, regulatory knowledge and strategic vision to help organizations build a safer and more sustainable future.">En <strong>BZB Consulting S.A.S</strong> combinamos experiencia técnica, conocimiento normativo y visión estratégica para ayudar a las organizaciones a construir un futuro más seguro y sostenible.</p>
+    <p class="reveal" data-es="Nuestro equipo acompaña procesos de sostenibilidad corporativa, economía circular, gestión ambiental y cumplimiento normativo con soluciones adaptadas a cada realidad empresarial." data-en="Our team supports corporate sustainability, circular economy, environmental management and regulatory compliance processes with solutions tailored to each business reality.">Nuestro equipo acompaña procesos de sostenibilidad corporativa, economía circular, gestión ambiental y cumplimiento normativo con soluciones adaptadas a cada realidad empresarial.</p>
+
+    <div class="about-features">
+      <div class="feature reveal">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <div class="feature-text">
+          <strong data-es="Rigor Técnico" data-en="Technical Rigor">Rigor Técnico</strong>
+          <span data-es="Metodologías actualizadas" data-en="Updated methodologies">Metodologías actualizadas</span>
+        </div>
+      </div>
+      <div class="feature reveal">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <div class="feature-text">
+          <strong data-es="Cumplimiento" data-en="Compliance">Cumplimiento</strong>
+          <span data-es="Normativa vigente" data-en="Current regulations">Normativa vigente</span>
+        </div>
+      </div>
+      <div class="feature reveal">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7v10l10 5 10-5V7z"/><path d="M2 7l10 5 10-5"/><path d="M12 22V12"/></svg></div>
+        <div class="feature-text">
+          <strong data-es="Enfoque Integral" data-en="Integral Approach">Enfoque Integral</strong>
+          <span data-es="Ambiente y seguridad" data-en="Environment and safety">Ambiente y seguridad</span>
+        </div>
+      </div>
+      <div class="feature reveal">
+        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div class="feature-text">
+          <strong data-es="Equipo Experto" data-en="Expert Team">Equipo Experto</strong>
+          <span data-es="Profesionales certificados" data-en="Certified professionals">Profesionales certificados</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="stats-grid">
+    <div class="reveal">
+      <div class="stat-num"><span class="count" data-target="3">0</span></div>
+      <div class="stat-label" data-es="Líneas de servicio" data-en="Service lines">Líneas de servicio</div>
+    </div>
+    <div class="reveal">
+      <div class="stat-num"><span class="count" data-target="24">0</span>h</div>
+      <div class="stat-label" data-es="Tiempo de respuesta" data-en="Response time">Tiempo de respuesta</div>
+    </div>
+    <div class="reveal">
+      <div class="stat-num">ISO<span style="font-size:.55em"> 14001</span></div>
+      <div class="stat-label" data-es="Estándar de referencia" data-en="Reference standard">Estándar de referencia</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section class="areas" id="servicios">
+  <div class="section-header-center">
+    <div class="section-tag reveal" data-es="Nuestros Servicios" data-en="Our Services">Nuestros Servicios</div>
+    <h2 class="section-title reveal" data-es="Áreas de acompañamiento estratégico" data-en="Strategic support areas">Áreas de acompañamiento estratégico</h2>
+    <p class="section-subtitle reveal" data-es="Tres líneas de servicio que cubren integralmente la gestión ambiental, la seguridad y la sostenibilidad corporativa de tu organización." data-en="Three service lines that comprehensively cover environmental management, safety and corporate sustainability for your organization.">Tres líneas de servicio que cubren integralmente la gestión ambiental, la seguridad y la sostenibilidad corporativa de tu organización.</p>
+  </div>
+
+  <div class="areas-grid">
+    <div class="area-card reveal">
+      <div class="area-image">
+        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80" alt="Sostenibilidad Empresarial">
+        <div class="area-image-tag" data-es="Sostenibilidad" data-en="Sustainability">Sostenibilidad</div>
+      </div>
+      <div class="area-body">
+        <h3 data-es="Sostenibilidad Empresarial" data-en="Corporate Sustainability">Sostenibilidad Empresarial</h3>
+        <ul>
+          <li data-es="Diagnósticos de sostenibilidad empresarial" data-en="Corporate sustainability assessments">Diagnósticos de sostenibilidad empresarial</li>
+          <li data-es="Análisis de doble materialidad" data-en="Double materiality analysis">Análisis de doble materialidad</li>
+          <li data-es="Cálculo y seguimiento de huella de carbono" data-en="Carbon footprint calculation and tracking">Cálculo y seguimiento de huella de carbono</li>
+          <li data-es="Informes de sostenibilidad y reportes ASG" data-en="Sustainability and ESG reporting">Informes de sostenibilidad y reportes ASG</li>
+          <li data-es="Matrices de priorización de asuntos materiales" data-en="Material topics prioritization matrices">Matrices de priorización de asuntos materiales</li>
+          <li data-es="Investigación aplicada en sostenibilidad" data-en="Applied sustainability research">Investigación aplicada en sostenibilidad</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="area-card reveal">
+      <div class="area-image">
+        <img src="https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?w=1200&q=80" alt="Economía Circular">
+        <div class="area-image-tag" data-es="Economía Circular" data-en="Circular Economy">Economía Circular</div>
+      </div>
+      <div class="area-body">
+        <h3 data-es="Economía Circular &amp; REP" data-en="Circular Economy &amp; EPR">Economía Circular &amp; REP</h3>
+        <ul>
+          <li data-es="Diagnósticos de flujos de materiales" data-en="Material flow assessments">Diagnósticos de flujos de materiales</li>
+          <li data-es="Estrategias de economía circular" data-en="Circular economy strategies">Estrategias de economía circular</li>
+          <li data-es="Programas de manejo de residuos" data-en="Waste management programs">Programas de manejo de residuos</li>
+          <li data-es="Control de emisiones y uso eficiente de recursos" data-en="Emissions control and resource efficiency">Control de emisiones y uso eficiente de recursos</li>
+          <li data-es="Responsabilidad Extendida del Productor" data-en="Extended Producer Responsibility">Responsabilidad Extendida del Productor</li>
+          <li data-es="Buenas prácticas ambientales aplicadas" data-en="Applied environmental best practices">Buenas prácticas ambientales aplicadas</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="area-card reveal">
+      <div class="area-image">
+        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80" alt="Gestión Empresarial">
+        <div class="area-image-tag" data-es="Gestión Empresarial" data-en="Business Management">Gestión Empresarial</div>
+      </div>
+      <div class="area-body">
+        <h3 data-es="Gestión Empresarial" data-en="Business Management">Gestión Empresarial</h3>
+        <ul>
+          <li data-es="Sistemas de Gestión Ambiental ISO 14001" data-en="ISO 14001 Environmental Management Systems">Sistemas de Gestión Ambiental ISO 14001</li>
+          <li data-es="Matrices de aspectos e impactos ambientales" data-en="Environmental aspects and impacts matrices">Matrices de aspectos e impactos ambientales</li>
+          <li data-es="Cumplimiento RUC – Sector transporte" data-en="RUC compliance – Transport sector">Cumplimiento RUC – Sector transporte</li>
+          <li data-es="Auditorías ambientales internas y externas" data-en="Internal and external environmental audits">Auditorías ambientales internas y externas</li>
+          <li data-es="Componente ambiental SSTA" data-en="HSEQ environmental component">Componente ambiental SSTA</li>
+          <li data-es="Indicadores de desempeño ambiental" data-en="Environmental performance indicators">Indicadores de desempeño ambiental</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-strip">
+  <div class="cta-content">
+    <h2 class="reveal" data-es="Transformamos la gestión ambiental en una <em>ventaja estratégica</em>" data-en="We turn environmental management into a <em>strategic advantage</em>">Transformamos la gestión ambiental en una <em>ventaja estratégica</em></h2>
+    <p class="reveal" data-es="Trabajamos junto a ti para diseñar soluciones a la medida que generan impacto real y sostenible." data-en="We work with you to design tailored solutions that generate real and sustainable impact.">Trabajamos junto a ti para diseñar soluciones a la medida que generan impacto real y sostenible.</p>
+    <a href="#reunion" class="btn btn-primary reveal" data-es="Agendar una reunión →" data-en="Book a meeting →">Agendar una reunión →</a>
+  </div>
+</section>
+
+<!-- EQUIPO -->
+<section class="team" id="equipo">
+  <div class="section-header-center">
+    <div class="section-tag reveal" data-es="Quiénes Somos" data-en="Who We Are">Quiénes Somos</div>
+    <h2 class="section-title reveal" data-es="El equipo detrás de BZB Consulting" data-en="The team behind BZB Consulting">El equipo detrás de BZB Consulting</h2>
+    <p class="section-subtitle reveal" data-es="Profesionales apasionados por la sostenibilidad y comprometidos con el impacto positivo." data-en="Professionals passionate about sustainability and committed to positive impact.">Profesionales apasionados por la sostenibilidad y comprometidos con el impacto positivo.</p>
+  </div>
+
+  <div class="team-grid">
+    <div class="team-card reveal">
+      <div class="team-head team-head-1"><div class="team-avatar">BZ</div></div>
+      <div class="team-body">
+        <h4>Bertha Zambrano Ussa</h4>
+        <div class="team-role" data-es="Gerente de Consultoría" data-en="Consulting Manager">Gerente de Consultoría</div>
+        <p data-es="Líder de BZB Consulting S.A.S con amplia experiencia en consultoría ambiental, sostenibilidad corporativa y gestión empresarial. Dirige el equipo técnico y estratégico de la firma." data-en="Leader of BZB Consulting S.A.S with extensive experience in environmental consulting, corporate sustainability and business management. She leads the firm's technical and strategic team.">Líder de BZB Consulting S.A.S con amplia experiencia en consultoría ambiental, sostenibilidad corporativa y gestión empresarial. Dirige el equipo técnico y estratégico de la firma.</p>
+        <div class="chips">
+          <span class="chip chip-a" data-es="Sostenibilidad" data-en="Sustainability">Sostenibilidad</span>
+          <span class="chip chip-b" data-es="Estrategia" data-en="Strategy">Estrategia</span>
+          <span class="chip chip-c" data-es="Consultoría" data-en="Consulting">Consultoría</span>
+        </div>
+        <a href="https://co.linkedin.com/in/bertha-rosana-zambrano-ussa-8b3164194" target="_blank" rel="noopener" class="team-linkedin">
+          <svg viewBox="0 0 24 24"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>
+          <span data-es="Ver perfil de LinkedIn" data-en="View LinkedIn profile">Ver perfil de LinkedIn</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="team-card reveal" style="border:2px dashed #c3d7e4;box-shadow:none;background:#fbfdfe">
+      <div class="team-head team-head-2">
+        <div class="team-avatar-empty">
+          <svg viewBox="0 0 24 24" style="width:66px;height:66px;stroke:#1f4e6e;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;opacity:.45"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+      </div>
+      <div class="team-body">
+        <h4 style="color:#8ea4b6" data-es="Nombre por definir" data-en="Name to be defined">Nombre por definir</h4>
+        <div class="team-role" style="color:#a3b8c8" data-es="Cargo por definir" data-en="Role to be defined">Cargo por definir</div>
+        <p style="color:#8ea4b6;font-style:italic" data-es="Este espacio será completado próximamente con la información profesional del siguiente integrante del equipo." data-en="This space will soon be completed with the professional information of the next team member.">Este espacio será completado próximamente con la información profesional del siguiente integrante del equipo.</p>
+        <div class="chips">
+          <span class="chip chip-off" data-es="Área 1" data-en="Area 1">Área 1</span>
+          <span class="chip chip-off" data-es="Área 2" data-en="Area 2">Área 2</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTES -->
+<section class="testimonials">
+  <div class="section-header-center">
+    <div class="section-tag reveal" data-es="Nuestros Clientes" data-en="Our Clients">Nuestros Clientes</div>
+    <h2 class="section-title reveal" data-es="Organizaciones que confían en nosotros" data-en="Organizations that trust us">Organizaciones que confían en nosotros</h2>
+  </div>
+
+  <div class="testimonials-grid">
+    <div class="testimonial reveal">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-quote" data-es="Con BZB Consulting desarrollamos nuestro análisis de doble materialidad, identificando riesgos, oportunidades y asuntos prioritarios para nuestra estrategia de sostenibilidad corporativa." data-en="With BZB Consulting we developed our double materiality analysis, identifying risks, opportunities and priority topics for our corporate sustainability strategy.">Con BZB Consulting desarrollamos nuestro análisis de doble materialidad, identificando riesgos, oportunidades y asuntos prioritarios para nuestra estrategia de sostenibilidad corporativa.</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar"><img src="cliente_dolmen.png" alt="Dolmen"></div>
+        <div class="testimonial-info"><strong>Dolmen</strong><span data-es="Análisis de Doble Materialidad" data-en="Double Materiality Analysis">Análisis de Doble Materialidad</span></div>
+      </div>
+    </div>
+
+    <div class="testimonial reveal">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-quote" data-es="BZB nos acompaña en el cumplimiento ambiental dentro del RUC y en la estructuración de programas de gestión de residuos, emisiones y uso eficiente de recursos en nuestras operaciones." data-en="BZB supports us in environmental compliance within the RUC and in structuring waste, emissions and resource efficiency management programs across our operations.">BZB nos acompaña en el cumplimiento ambiental dentro del RUC y en la estructuración de programas de gestión de residuos, emisiones y uso eficiente de recursos en nuestras operaciones.</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar"><img src="cliente_tkarga.png" alt="Tkarga"></div>
+        <div class="testimonial-info"><strong>Tkarga</strong><span data-es="Sector Transporte · RUC" data-en="Transport Sector · RUC">Sector Transporte · RUC</span></div>
+      </div>
+    </div>
+
+    <div class="testimonial reveal">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-quote" data-es="El acompañamiento en gestión ambiental institucional nos permitió fortalecer nuestras prácticas de manejo de residuos, cultura ambiental y lineamientos de SSTA." data-en="Their support in institutional environmental management allowed us to strengthen our waste management practices, environmental culture and HSEQ guidelines.">El acompañamiento en gestión ambiental institucional nos permitió fortalecer nuestras prácticas de manejo de residuos, cultura ambiental y lineamientos de SSTA.</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar"><img src="cliente_merani.png" alt="Merani Proyectos"></div>
+        <div class="testimonial-info"><strong>Merani Proyectos</strong><span data-es="Gestión Ambiental Institucional" data-en="Institutional Environmental Management">Gestión Ambiental Institucional</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee">
+    <img src="cliente_dolmen.png" alt="Dolmen"><img src="cliente_tkarga.png" alt="Tkarga"><img src="cliente_merani.png" alt="Merani Proyectos">
+    <img src="cliente_dolmen.png" alt="Dolmen"><img src="cliente_tkarga.png" alt="Tkarga"><img src="cliente_merani.png" alt="Merani Proyectos">
+    <img src="cliente_dolmen.png" alt="Dolmen"><img src="cliente_tkarga.png" alt="Tkarga"><img src="cliente_merani.png" alt="Merani Proyectos">
+    <img src="cliente_dolmen.png" alt="Dolmen"><img src="cliente_tkarga.png" alt="Tkarga"><img src="cliente_merani.png" alt="Merani Proyectos">
+  </div>
+</div>
+
+<!-- AGENDAR REUNIÓN -->
+<section class="meeting" id="reunion">
+  <div class="section-header-center">
+    <div class="section-tag reveal" data-es="Agendar Reunión" data-en="Book a Meeting">Agendar Reunión</div>
+    <h2 class="section-title reveal" data-es="Conversemos sobre tu proyecto" data-en="Let's talk about your project">Conversemos sobre tu proyecto</h2>
+    <p class="section-subtitle reveal" data-es="Cuéntanos quién eres y qué necesitas. Te contactaremos para coordinar una reunión sin costo." data-en="Tell us who you are and what you need. We'll reach out to schedule a free consultation.">Cuéntanos quién eres y qué necesitas. Te contactaremos para coordinar una reunión sin costo.</p>
+  </div>
+
+  <div class="form-card reveal">
+    <div class="form-grid">
+      <div class="field">
+        <label data-es="Nombre completo *" data-en="Full name *">Nombre completo *</label>
+        <input type="text" id="f-nombre" data-ph-es="Ej. María Rodríguez" data-ph-en="e.g. Maria Rodriguez" placeholder="Ej. María Rodríguez">
+      </div>
+      <div class="field">
+        <label data-es="Empresa u organización" data-en="Company or organization">Empresa u organización</label>
+        <input type="text" id="f-empresa" data-ph-es="Ej. Industrias XYZ S.A.S" data-ph-en="e.g. XYZ Industries" placeholder="Ej. Industrias XYZ S.A.S">
+      </div>
+      <div class="field">
+        <label data-es="Correo electrónico *" data-en="Email address *">Correo electrónico *</label>
+        <input type="email" id="f-email" data-ph-es="correo@empresa.com" data-ph-en="email@company.com" placeholder="correo@empresa.com">
+      </div>
+      <div class="field">
+        <label data-es="Teléfono / WhatsApp" data-en="Phone / WhatsApp">Teléfono / WhatsApp</label>
+        <input type="tel" id="f-tel" data-ph-es="+57 300 000 0000" data-ph-en="+57 300 000 0000" placeholder="+57 300 000 0000">
+      </div>
+      <div class="field">
+        <label data-es="Servicio de interés" data-en="Service of interest">Servicio de interés</label>
+        <select id="f-servicio">
+          <option data-es="Sostenibilidad Empresarial" data-en="Corporate Sustainability">Sostenibilidad Empresarial</option>
+          <option data-es="Economía Circular &amp; REP" data-en="Circular Economy &amp; EPR">Economía Circular &amp; REP</option>
+          <option data-es="Gestión Empresarial / ISO 14001" data-en="Business Management / ISO 14001">Gestión Empresarial / ISO 14001</option>
+          <option data-es="Huella de carbono" data-en="Carbon footprint">Huella de carbono</option>
+          <option data-es="Doble materialidad" data-en="Double materiality">Doble materialidad</option>
+          <option data-es="Otro / No estoy seguro" data-en="Other / Not sure">Otro / No estoy seguro</option>
+        </select>
+      </div>
+      <div class="field">
+        <label data-es="Modalidad preferida" data-en="Preferred format">Modalidad preferida</label>
+        <select id="f-modalidad">
+          <option data-es="Videollamada" data-en="Video call">Videollamada</option>
+          <option data-es="Llamada telefónica" data-en="Phone call">Llamada telefónica</option>
+          <option data-es="Reunión presencial (Bogotá)" data-en="In-person meeting (Bogotá)">Reunión presencial (Bogotá)</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label data-es="Propósito o interés de la reunión *" data-en="Purpose or interest of the meeting *">Propósito o interés de la reunión *</label>
+        <textarea id="f-mensaje" data-ph-es="Cuéntanos brevemente qué necesitas: diagnóstico, reporte ASG, auditoría, capacitación, etc." data-ph-en="Briefly tell us what you need: assessment, ESG report, audit, training, etc." placeholder="Cuéntanos brevemente qué necesitas: diagnóstico, reporte ASG, auditoría, capacitación, etc."></textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-wa" onclick="enviarWA()" data-es="Enviar por WhatsApp" data-en="Send via WhatsApp">Enviar por WhatsApp</button>
+      <button class="btn btn-mail" onclick="enviarMail()" data-es="Enviar por correo" data-en="Send via email">Enviar por correo</button>
+    </div>
+    <div class="form-note" data-es="Los campos marcados con * son obligatorios. Te responderemos en menos de 24 horas." data-en="Fields marked with * are required. We'll get back to you within 24 hours.">Los campos marcados con * son obligatorios. Te responderemos en menos de 24 horas.</div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section class="contact" id="contacto">
+  <div class="contact-header">
+    <div class="section-tag reveal" data-es="Contacto" data-en="Contact">Contacto</div>
+    <h2 class="section-title reveal" data-es="Contáctenos" data-en="Contact Us">Contáctenos</h2>
+    <p class="section-subtitle reveal" data-es="Estamos listos para acompañarte. Escríbenos y te responderemos en menos de 24 horas." data-en="We're ready to support you. Write to us and we'll respond within 24 hours.">Estamos listos para acompañarte. Escríbenos y te responderemos en menos de 24 horas.</p>
+  </div>
+
+  <div class="contact-grid">
+    <a href="mailto:ingberthazambrano@gmail.com" class="contact-card reveal">
+      <div class="contact-icon-round">
+        <svg viewBox="0 0 24 24" style="stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <h4 data-es="Correo" data-en="Email">Correo</h4>
+      <div class="val">ingberthazambrano@gmail.com</div>
+    </a>
+
+    <a href="https://wa.me/573134158101" target="_blank" rel="noopener" class="contact-card reveal">
+      <div class="contact-icon-round contact-icon-wa">
+        <svg viewBox="0 0 24 24" style="fill:#fff"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.2-.6-.4M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.3-1.4c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2"/></svg>
+      </div>
+      <h4>WhatsApp</h4>
+      <div class="val">+57 313 415 8101</div>
+    </a>
+  </div>
+
+  <div class="contact-address reveal">
+    <div class="contact-address-icon">
+      <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    </div>
+    <div class="contact-address-text">
+      <strong data-es="Ubicación" data-en="Location">Ubicación</strong>
+      <span data-es="Bogotá, Colombia" data-en="Bogotá, Colombia">Bogotá, Colombia</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <img src="logo_bzb.jpg" onerror="this.onerror=null;this.src='logo_bzb.jpg.jpg'" alt="BZB Consulting">
+      <p data-es="Environmental and Safety Company. Consultoría ambiental y de seguridad integral para organizaciones que buscan generar valor sostenible." data-en="Environmental and Safety Company. Comprehensive environmental and safety consulting for organizations seeking to generate sustainable value.">Environmental and Safety Company. Consultoría ambiental y de seguridad integral para organizaciones que buscan generar valor sostenible.</p>
+      <div class="footer-social">
+        <a href="https://co.linkedin.com/in/bertha-rosana-zambrano-ussa-8b3164194" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>
+        </a>
+        <a href="https://wa.me/573134158101" target="_blank" rel="noopener" aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.2-.6-.4M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.3-1.4c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2"/></svg>
+        </a>
+        <a href="mailto:ingberthazambrano@gmail.com" aria-label="Correo">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h5 data-es="Servicios" data-en="Services">Servicios</h5>
+      <ul>
+        <li><a href="#servicios" data-es="Sostenibilidad" data-en="Sustainability">Sostenibilidad</a></li>
+        <li><a href="#servicios" data-es="Economía Circular" data-en="Circular Economy">Economía Circular</a></li>
+        <li><a href="#servicios" data-es="Gestión Empresarial" data-en="Business Management">Gestión Empresarial</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h5 data-es="Empresa" data-en="Company">Empresa</h5>
+      <ul>
+        <li><a href="#nosotros" data-es="Sobre Nosotros" data-en="About Us">Sobre Nosotros</a></li>
+        <li><a href="#equipo" data-es="Nuestro Equipo" data-en="Our Team">Nuestro Equipo</a></li>
+        <li><a href="#reunion" data-es="Agendar Reunión" data-en="Book a Meeting">Agendar Reunión</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div data-es="BZB Consulting S.A.S © 2026 · Todos los derechos reservados" data-en="BZB Consulting S.A.S © 2026 · All rights reserved">BZB Consulting S.A.S © 2026 · Todos los derechos reservados</div>
+    <div>Bogotá, Colombia</div>
+  </div>
+</footer>
+
+<a href="https://wa.me/573134158101" target="_blank" rel="noopener" class="wa-float" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.2-.6-.4M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.3-1.4c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2"/></svg>
+</a>
+
+<script>
+/* ===== IDIOMA ===== */
+let LANG = 'es';
+function setLang(l){
+  LANG = l;
+  document.documentElement.lang = l;
+  document.getElementById('btn-es').classList.toggle('active', l === 'es');
+  document.getElementById('btn-en').classList.toggle('active', l === 'en');
+  document.querySelectorAll('[data-es]').forEach(el => {
+    const t = el.getAttribute('data-' + l);
+    if (t !== null) el.innerHTML = t;
+  });
+  document.querySelectorAll('[data-ph-es]').forEach(el => {
+    const t = el.getAttribute('data-ph-' + l);
+    if (t !== null) el.placeholder = t;
+  });
+}
+
+/* ===== MENÚ ===== */
+function toggleMenu(){
+  document.getElementById('hamburger').classList.toggle('active');
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+function closeMenu(){
+  document.getElementById('hamburger').classList.remove('active');
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+
+/* ===== SCROLL ===== */
+const nav = document.getElementById('nav');
+const bar = document.getElementById('progress');
+const heroBg = document.getElementById('heroBg');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  bar.style.width = (window.scrollY / h * 100) + '%';
+  nav.classList.toggle('shrink', window.scrollY > 60);
+  if (window.scrollY < window.innerHeight) {
+    heroBg.style.transform = 'translateY(' + (window.scrollY * 0.32) + 'px) scale(1.08)';
+  }
+}, {passive:true});
+
+/* ===== REVEAL ===== */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('on'), i * 90);
+      io.unobserve(e.target);
+    }
+  });
+}, {threshold: 0.12, rootMargin: '0px 0px -60px 0px'});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ===== CONTADORES ===== */
+const cio = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target, target = +el.dataset.target;
+    let cur = 0;
+    const step = Math.max(1, Math.ceil(target / 45));
+    const t = setInterval(() => {
+      cur += step;
+      if (cur >= target) { cur = target; clearInterval(t); }
+      el.textContent = cur;
+    }, 26);
+    cio.unobserve(el);
+  });
+}, {threshold: 0.5});
+document.querySelectorAll('.count').forEach(c => cio.observe(c));
+
+/* ===== TILT 3D ===== */
+document.querySelectorAll('.area-card, .team-card, .testimonial').forEach(card => {
+  card.addEventListener('mousemove', ev => {
+    const r = card.getBoundingClientRect();
+    const rx = ((ev.clientY - r.top) / r.height - .5) * -5;
+    const ry = ((ev.clientX - r.left) / r.width - .5) * 5;
+    card.style.transform = 'translateY(-12px) perspective(1000px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
+  });
+  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+});
+
+/* ===== HOJAS ===== */
+const hero = document.querySelector('.hero');
+for (let i = 0; i < 14; i++) {
+  const leaf = document.createElement('div');
+  leaf.className = 'leaf';
+  leaf.style.left = Math.random() * 100 + '%';
+  leaf.style.animation = 'drift ' + (11 + Math.random() * 10) + 's linear ' + (Math.random() * 12) + 's infinite';
+  leaf.style.transform = 'scale(' + (0.6 + Math.random() * 1.1) + ')';
+  leaf.style.background = Math.random() > 0.5 ? '#8fd14f' : '#3eb1c8';
+  hero.appendChild(leaf);
+}
+
+/* ===== FORMULARIO ===== */
+function recolectar(){
+  const v = id => (document.getElementById(id).value || '').trim();
+  const sel = id => { const s = document.getElementById(id); return s.options[s.selectedIndex].textContent.trim(); };
+  const d = {
+    nombre: v('f-nombre'),
+    empresa: v('f-empresa'),
+    email: v('f-email'),
+    tel: v('f-tel'),
+    servicio: sel('f-servicio'),
+    modalidad: sel('f-modalidad'),
+    mensaje: v('f-mensaje')
+  };
+  if (!d.nombre || !d.email || !d.mensaje) {
+    alert(LANG === 'es'
+      ? 'Por favor completa los campos obligatorios: nombre, correo y propósito de la reunión.'
+      : 'Please complete the required fields: name, email and meeting purpose.');
+    return null;
+  }
+  return d;
+}
+
+function armarTexto(d){
+  const L = LANG === 'es';
+  return (L ? 'SOLICITUD DE REUNIÓN — BZB Consulting' : 'MEETING REQUEST — BZB Consulting') + '\n\n' +
+    (L ? 'Nombre: ' : 'Name: ') + d.nombre + '\n' +
+    (L ? 'Empresa: ' : 'Company: ') + (d.empresa || '-') + '\n' +
+    (L ? 'Correo: ' : 'Email: ') + d.email + '\n' +
+    (L ? 'Teléfono: ' : 'Phone: ') + (d.tel || '-') + '\n' +
+    (L ? 'Servicio de interés: ' : 'Service of interest: ') + d.servicio + '\n' +
+    (L ? 'Modalidad: ' : 'Format: ') + d.modalidad + '\n\n' +
+    (L ? 'Propósito:\n' : 'Purpose:\n') + d.mensaje;
+}
+
+function enviarWA(){
+  const d = recolectar();
+  if (!d) return;
+  window.open('https://wa.me/573134158101?text=' + encodeURIComponent(armarTexto(d)), '_blank');
+}
+
+function enviarMail(){
+  const d = recolectar();
+  if (!d) return;
+  const asunto = (LANG === 'es' ? 'Solicitud de reunión — ' : 'Meeting request — ') + d.nombre + (d.empresa ? ' (' + d.empresa + ')' : '');
+  window.location.href = 'mailto:ingberthazambrano@gmail.com?subject=' + encodeURIComponent(asunto) + '&body=' + encodeURIComponent(armarTexto(d));
+}
+</script>
+
+</body>
+</html>
